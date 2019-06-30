@@ -1,0 +1,9 @@
+#
+# This file allows you to create a new mysql user when setting up the container.
+# That way you don't have to rely on the 'root' user, which is insecure.
+# For this script to take effect you'll have to rename it to createuser.sql.
+#
+
+CREATE USER 'magedock'@'% IDENTIFIED WITH mysql_native_password BY 'your_password';
+GRANT ALL PRIVILEGES ON *.* TO 'magedock';
+FLUSH PRIVILEGES;
