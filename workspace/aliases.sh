@@ -149,3 +149,101 @@ function fs() {
 		du $arg .[^.]* ./*;
 	fi;
 }
+
+# Magento 2 aliases
+alias m2cl="php bin/magento cache:clean"
+alias m2fl="php bin/magento cache:flush"
+alias m2modeset="php bin/magento deploy:mode:set"
+alias m2enable="php bin/magento module:enable"
+alias m2disable="php bin/magento module:disable"
+alias m2compile="php bin/magento setup:di:compile && php bin/magento cache:clean"
+alias m2dep="php bin/magento setup:static-content:deploy"
+alias m2depf="php bin/magento setup:static-content:deploy -f"
+alias m2reindex="php bin/magento indexer:reindex"
+alias m2i18n="php bin/magento i18n:collect-phrases"
+
+# Invokes setup:upgrade
+# If a module name is specified then it will try to enable first
+# Usage: m2up Vendor_Module
+function m2up() {
+    if [[ -n $1 ]]; then
+        php bin/magento module:enable "$1"
+    fi;
+    php bin/magento setup:upgrade
+}
+
+# Deletes all compiled files for the given theme
+# Usage: m2tclean Vendor/theme
+function m2tclean() {
+    if [[ ! -n $1 ]]; then
+        echo "You must specify the theme folder"
+        return
+    fi;
+
+    local lang=(en_US)
+    local theme=$1
+
+    if [[ -n $2 ]]; then
+        shift
+        lang=$@
+    fi
+
+    rm -Rf var/cache && rm -Rf var/view_preprocessed
+
+    for i in $lang
+    do
+        local dir=pub/static/frontend/$theme/$i
+        rm -Rf "$dir"
+    done
+}
+
+# Recompiles all files for the given theme and cleans cache
+# Usage: m2tcl Vendor/theme en_US es_AR
+function m2tcl() {
+    m2tclean $*
+    if [[ ! -n $1 ]]; then
+        return
+    fi;
+    shift
+    php bin/magento setup:static-content:deploy -f $@ && php bin/magento cache:clean
+}
+
+# Finds content on less style sheets inside the default Magento themes
+# Usage: m2lgrep  @copyright__background-color
+function m2lgrep() {
+    local dirs
+    if [[ -d app/design/frontend/Magento/blank ]]; then
+        dirs=(app/design/frontend/Magento/blank app/design/frontend/Magento/luma)
+    else
+        dirs=(vendor/magento/theme-frontend-blank vendor/magento/theme-frontend-luma)
+    fi;
+    grep -Rn "$*" --include \*.less ${dirs[@]}
+}
+
+# Runs grep againts the view/configuration files inside a default Magento theme.
+# Supports an additional module name argument.
+# Usage: m2tgrep title Vendor_Module
+function m2tgrep() {
+    local dirs
+    if [[ -d app/design/frontend/Magento/blank ]]; then
+        dirs=(app/design/frontend/Magento/blank/$2 app/design/frontend/Magento/luma/$2)
+    else
+        dirs=(vendor/magento/theme-frontend-blank/$2 vendor/magento/theme-frontend-luma/$2)
+    fi;
+    grep -Rn "$1" --include \*.phtml --include \*.html --include \*.xml ${dirs[@]}
+}
+
+# Runs grep againts the view/configuration files inside a module.
+# Module must be entered in snake case.
+# Usage: m2mgrep price catalog-search
+function m2mgrep() {
+    if [[ -d app/design/frontend/Magento/blank ]]; then
+        local module=$(echo "$2" | sed 's/^\(\w\)/\U\1/' | sed 's/-\(\w\)/\U\1/g')
+        module="app/code/Magento/$module/"
+    else
+        local module="vendor/magento/module-$2/"
+    fi;
+
+    grep -Rn "$1" --include \*.phtml --include \*.html --include \*.xml "$module"
+}
+
