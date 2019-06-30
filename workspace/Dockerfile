@@ -252,7 +252,7 @@ ARG INSTALL_SOAP=false
 
 RUN if [ ${INSTALL_SOAP} = true ]; then \
   # Install the PHP SOAP extension
-  apt-get -y install libxml2-dev php${LARADOCK_PHP_VERSION}-soap \
+  apt-get update && apt-get -y install libxml2-dev php${LARADOCK_PHP_VERSION}-soap \
 ;fi
 
 ###########################################################################
@@ -542,7 +542,7 @@ ENV NVM_DIR /home/laradock/.nvm
 RUN if [ ${INSTALL_NODE} = true ]; then \
     # Install nvm (A Node Version Manager)
     mkdir -p $NVM_DIR && \
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash \
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash \
         && . $NVM_DIR/nvm.sh \
         && nvm install ${NODE_VERSION} \
         && nvm use ${NODE_VERSION} \
