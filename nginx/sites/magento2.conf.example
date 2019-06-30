@@ -1,0 +1,11 @@
+upstream fastcgi_backend {
+    server  php-fpm:9000;
+}
+
+server {
+    listen 80;
+    server_name magento2.test;
+    set $MAGE_ROOT /var/www/magento2;
+    set $MAGE_MODE developer;
+    include /var/www/magento2/nginx.conf.sample;
+}
