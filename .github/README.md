@@ -416,30 +416,7 @@ Try accessing your application's URL through a browser adding the route given to
 
 ### Setup Magento 2 crontab
 
-Magento 2 comes included with a crontab configuration tool that you can run with the following command:
-
-```
-php bin/magento cron:install
-```
-
-Running `crontab -l` afterwards should print the following (the `php` executable might differ):
-
-```
-#~ MAGENTO START 5a49757e3d08587a2ba0027d900f4ea3
-* * * * * /usr/bin/php7.2 /var/www/magento2/bin/magento cron:run 2>&1 | grep -v "Ran jobs by schedule" >> /var/www/magento2/var/log/magento.cron.log
-* * * * * /usr/bin/php7.2 /var/www/magento2/update/cron.php >> /var/www/magento2/var/log/update.cron.log
-* * * * * /usr/bin/php7.2 /var/www/magento2/bin/magento setup:cron:run >> /var/www/magento2/var/log/setup.cron.log
-#~ MAGENTO END 5a49757e3d08587a2ba0027d900f4ea3
-```
-
-Keep in mind that this configuration will be removed once you restart your container. To ensure the crontab gets updated, we'll have to update the `workspace` container to include these commands. Start by killing the containers:
-
-```
-exit
-docker-compose down
-```
-
-Create a new file inside the `workspace/crontab` folder that identifies the application you're adding the commands for:
+Create a new file inside the `workspace/crontab` folder that identifies the application you're adding the crontab for:
 
 ```
 touch workspace/crontab/magento2
@@ -448,15 +425,16 @@ touch workspace/crontab/magento2
 Open this file on an text editor and paste the following:
 
 ```
-* * * * * /usr/bin/php /var/www/magento2/bin/magento cron:run 2>&1 | grep -v "Ran jobs by schedule" >> /var/www/magento2/var/log/magento.cron.log
-* * * * * /usr/bin/php /var/www/magento2/update/cron.php >> /var/www/magento2/var/log/update.cron.log
-* * * * * /usr/bin/php /var/www/magento2/bin/magento setup:cron:run >> /var/www/magento2/var/log/setup.cron.log
+* * * * * laradock /usr/bin/php /var/www/magento2/bin/magento cron:run | grep -v Ran jobs by schedule >> /var/www/magento2/var/log/magento.cron.log
+* * * * * laradock /usr/bin/php /var/www/magento2/bin/magento setup:cron:run >> /var/www/magento2/var/log/setup.cron.log
 ```
 
-Notice how we switched from `php7.2` to `php`. If your application runs on a folder other than `magento2` then apply the changes necessary. To update our workspace container we'll have to rebuild it:
+Adjust the path to the magento script. Rebuild your `workspace` and restart your containers.
 
 ```
-docker-compose up -d --build nginx mysql phpmyadmin
+docker-compose down
+docker-compose build workspace
+docker-compose up -d nginx mysql
 ```
 
 After that, try logging into you Magento application as an admin. You shouldn't see any warning messages about invalid indexes now.
