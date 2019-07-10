@@ -453,7 +453,7 @@ Restart your containers. As long you keep that configuration on another Magento 
 
 ### Using an existing database
 
-If Magento was installed on another computer, instead of reinstalling the application, try copying the files `config.php` and `env.php` that were generated after the installation to you local `app/etc` folder.
+If Magento was installed on another computer, instead of reinstalling the application, try copying the files `config.php` and `env.php` that were generated after the installation to you local `app/etc` folder. If you're also porting the database, right after you finished migrating, open the database manager of your preference and locate the configuration values with the following paths: `web/secure/base_url` and `web/unsecure/base_url`. Update the values so they correspond to your local domains.
 
 ### Bash aliases
 
