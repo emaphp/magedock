@@ -174,11 +174,11 @@ function certmake() {
 
     letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text
 
-    mkdir -p /var/www/letsencrypt/$domain
+    mkdir -p /var/certs/$domain
 
     if [[ -n $3 ]]; then
-        cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/www/letsencrypt/$domain
-        cp /etc/letsencrypt/archive/$domain/privkey.pem /var/www/letsencrypt/$domain
+        cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/certs/$domain
+        cp /etc/letsencrypt/archive/$domain/privkey.pem /var/certs/$domain
     fi;
 }
 
@@ -194,8 +194,8 @@ function certrenew() {
     # certbot renew
     certbot certonly -n -d $domain
 
-    cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/www/letsencrypt/$domain
-    cp /etc/letsencrypt/archive/$domain/privkey.pem /var/www/letsencrypt/$domain
+    cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/certs/$domain
+    cp /etc/letsencrypt/archive/$domain/privkey.pem /var/certs/$domain
 }
 
 alias certshow="certbot certificates"
