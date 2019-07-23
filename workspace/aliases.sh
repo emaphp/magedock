@@ -150,6 +150,56 @@ function fs() {
 	fi;
 }
 
+# Generates a certificate with LetsEncrypt
+# You need to provide a domain, an email and the webroot folder
+# Usage: certmake your-domain.com user@example.com /var/www/my-site-folder
+function certmake() {
+    if [[ ! -n $1 ]]; then
+        domain=$1
+        echo "certmake: You must specify a domain"
+        return
+    fi;
+
+    if [[ ! -n $2 ]]; then
+        email=$2
+        echo "certmake: You must specify an email"
+        return
+    fi;
+
+    if [[ ! -n $3 ]]; then
+        webroot=$3
+        echo "certmake: You must specify a webroot"
+        return
+    fi;
+
+    letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text
+
+    mkdir -p /var/www/letsencrypt/$domain
+
+    if [[ -n $3 ]]; then
+        cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/www/letsencrypt/$domain
+        cp /etc/letsencrypt/archive/$domain/privkey.pem /var/www/letsencrypt/$domain
+    fi;
+}
+
+# Renews an existing certificate
+# Usage: certrenew your-domain.com
+function certrenew() {
+    if [[ ! -n $1 ]]; then
+        domain=$1
+        echo "certrenew: You must specify a domain"
+        return
+    fi;
+
+    # certbot renew
+    certbot certonly -n -d $domain
+
+    cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/www/letsencrypt/$domain
+    cp /etc/letsencrypt/archive/$domain/privkey.pem /var/www/letsencrypt/$domain
+}
+
+alias certshow="certbot certificates"
+
 # Magento 2 aliases
 alias m2cl="php bin/magento cache:clean"
 alias m2fl="php bin/magento cache:flush"

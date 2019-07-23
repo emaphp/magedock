@@ -12,6 +12,7 @@ This is a Docker powered environment based on [Laradock](http://laradock.io/), a
  * SOAP, XSL and Mongo extensions installed by default.
  * Node "LTS" version installed by default (not *latest*).
  * Working *nginx* configuration files for Magento 2 and Symfony 4.
+ * `letsencrypt` installed on `workspace` container.
  * Both `gulp` and `vue-cli` not installed by default.
  
 This repo also contains an extensive documentation about how to get your project up and running as fast as possible.

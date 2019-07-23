@@ -123,6 +123,9 @@ services:
           - no_proxy
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - ./data/certbot/certs/:${APP_CODE_PATH_CONTAINER}/letsencrypt
+        # - /etc/letsencrypt:/etc/letsencrypt
+        # - /var/lib/letsencrypt:/var/lib/letsencrypt
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
