@@ -155,31 +155,30 @@ function fs() {
 # Usage: certmake your-domain.com user@example.com /var/www/my-site-folder
 function certmake() {
     if [[ ! -n $1 ]]; then
-        domain=$1
         echo "certmake: You must specify a domain"
         return
     fi;
 
     if [[ ! -n $2 ]]; then
-        email=$2
         echo "certmake: You must specify an email"
         return
     fi;
 
     if [[ ! -n $3 ]]; then
-        webroot=$3
         echo "certmake: You must specify a webroot"
         return
     fi;
 
+    domain=$1
+    email=$2
+    webroot=$3
+
     letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text
 
-    mkdir -p /var/certs/$domain
+    mkdir -p /var/certs/"$domain"
 
-    if [[ -n $3 ]]; then
-        cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/certs/$domain
-        cp /etc/letsencrypt/archive/$domain/privkey.pem /var/certs/$domain
-    fi;
+    cp /etc/letsencrypt/archive/"$domain"/fullchain.pem /var/certs/"$domain"
+    cp /etc/letsencrypt/archive/"$domain"/privkey.pem /var/certs/"$domain"
 }
 
 # Renews an existing certificate
