@@ -177,24 +177,30 @@ function certmake() {
 
     mkdir -p /var/certs/"$domain"
 
-    cp /etc/letsencrypt/archive/"$domain"/fullchain.pem /var/certs/"$domain"
-    cp /etc/letsencrypt/archive/"$domain"/privkey.pem /var/certs/"$domain"
+    cp /etc/letsencrypt/live/"$domain"/fullchain.pem /var/certs/"$domain"
+    cp /etc/letsencrypt/live/"$domain"/privkey.pem /var/certs/"$domain"
 }
 
-# Renews an existing certificate
-# Usage: certrenew your-domain.com
+# Renews all existing certificates
+# Add -c to also copy the renewed certificates to the default folder
+# Usage: certrenew
 function certrenew() {
-    if [[ ! -n $1 ]]; then
-        domain=$1
-        echo "certrenew: You must specify a domain"
-        return
-    fi;
+    certbot renew
 
-    # certbot renew
-    certbot certonly -n -d $domain
-
-    cp /etc/letsencrypt/archive/$domain/fullchain.pem /var/certs/$domain
-    cp /etc/letsencrypt/archive/$domain/privkey.pem /var/certs/$domain
+    while getopts ":c" opt; do
+        case $opt in
+            c)
+                for D in `find /etc/letsencrypt/live -mindepth 1 -maxdepth 1 -type d`
+                do
+                    domain=$(basename "$D")
+                    target=/var/certs/"$domain"
+                    mkdir -p "$target"
+                    cp "$D"/fullchain.pem "$target"
+                    cp "$D"/privkey.pem "$target"
+                done
+                ;;
+        esac
+    done
 }
 
 alias certshow="certbot certificates"

@@ -185,7 +185,9 @@ RUN chmod -R 644 /etc/cron.d
 
 USER root
 
-RUN add-apt-repository ppa:certbot/certbot && apt-get update && apt-get install python-certbot-nginx -y
+RUN add-apt-repository ppa:certbot/certbot && \
+  apt-get update && \
+  apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install python-certbot-nginx -y
 
 ###########################################################################
 # Drush:
