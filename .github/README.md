@@ -9,7 +9,7 @@ This is a Docker powered environment based on [Laradock](http://laradock.io/), a
 ## What's different?
 
  * (Real) UTF-8 in MySQL ([using utf8mb4](https://medium.com/@adamhooper/in-mysql-never-use-utf8-use-utf8mb4-11761243e434))
- * SOAP, XSL and Mongo extensions installed by default.
+ * SOAP and XSL extensions installed by default.
  * Node "LTS" version installed by default (not *latest*).
  * Working *nginx* configuration files for Magento 2 and Symfony 4.
  * `letsencrypt` installed on `workspace` container.
