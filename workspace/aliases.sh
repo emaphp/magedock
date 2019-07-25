@@ -173,12 +173,10 @@ function certmake() {
     email=$2
     webroot=$3
 
-    letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text
-
-    mkdir -p /var/certs/"$domain"
-
-    cp /etc/letsencrypt/live/"$domain"/fullchain.pem /var/certs/"$domain"
-    cp /etc/letsencrypt/live/"$domain"/privkey.pem /var/certs/"$domain"
+    letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text && \
+        mkdir -p /var/certs/"$domain" && \
+        cp /etc/letsencrypt/live/"$domain"/fullchain.pem /var/certs/"$domain" && \
+        cp /etc/letsencrypt/live/"$domain"/privkey.pem /var/certs/"$domain"
 }
 
 # Renews all existing certificates
@@ -194,9 +192,9 @@ function certrenew() {
                 do
                     domain=$(basename "$D")
                     target=/var/certs/"$domain"
-                    mkdir -p "$target"
-                    cp "$D"/fullchain.pem "$target"
-                    cp "$D"/privkey.pem "$target"
+                    mkdir -p "$target" && \
+                        cp "$D"/fullchain.pem "$target" && \
+                        cp "$D"/privkey.pem "$target"
                 done
                 ;;
         esac
