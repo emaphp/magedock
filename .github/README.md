@@ -624,7 +624,7 @@ docker-compose down
 Before creating the new certificates, we'll add a new cronjob that invokes the renewal process. Add a new file inside `workspace/crontab` called `certrenew`. Add the following line:
 
 ```
-0 */12 * * * root certrenew -c >> /dev/null 2> /var/certs/renew.log
+0 */12 * * * root bash -c "source /root/aliases.sh && certrenew -c >> /dev/null 2> /var/certs/certrenew.log"
 ```
 
 The `certrenew` command is added as an alias of `certbot renew`. The `-c` flag is added so new certificates are copied to the default directory (`/var/certs`). Now rebuild the workspace container.
