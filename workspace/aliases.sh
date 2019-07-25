@@ -183,22 +183,25 @@ function certmake() {
 # Add -c to also copy the renewed certificates to the default folder
 # Usage: certrenew
 function certrenew() {
+    local certdir="/etc/letsencrypt/live"
     certbot renew
 
-    while getopts ":c" opt; do
-        case $opt in
-            c)
-                for D in `find /etc/letsencrypt/live -mindepth 1 -maxdepth 1 -type d`
-                do
-                    domain=$(basename "$D")
-                    target=/var/certs/"$domain"
-                    mkdir -p "$target" && \
-                        cp "$D"/fullchain.pem "$target" && \
-                        cp "$D"/privkey.pem "$target"
-                done
-                ;;
-        esac
-    done
+    if [ -d "$certdir" ]; then
+        while getopts ":c" opt; do
+            case $opt in
+                c)
+                    for D in `find $certdir -mindepth 1 -maxdepth 1 -type d`
+                    do
+                        domain=$(basename "$D")
+                        target=/var/certs/"$domain"
+                        mkdir -p "$target" && \
+                            cp "$D"/fullchain.pem "$target" && \
+                            cp "$D"/privkey.pem "$target"
+                    done
+                    ;;
+            esac
+        done
+    fi
 }
 
 alias certshow="certbot certificates"
