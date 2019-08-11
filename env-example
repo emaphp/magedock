@@ -730,3 +730,6 @@ SONARQUBE_POSTGRES_HOST=postgres
 SONARQUBE_POSTGRES_DB=sonar
 SONARQUBE_POSTGRES_USER=sonar
 SONARQUBE_POSTGRES_PASSWORD=sonarPass
+
+### SONIC ################################################
+SONIC_PORT=1491

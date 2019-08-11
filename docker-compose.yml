@@ -45,6 +45,8 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   sonarqube:
     driver: ${VOLUMES_DRIVER}
+  sonic:
+    driver: ${VOLUMES_DRIVER}
 
 services:
 
@@ -1536,3 +1538,14 @@ services:
         - postgres
       volumes:
         - ${DATA_PATH_HOST}/Confluence:/var/atlassian/application-data
+### SONIC ################################################
+    sonic:
+      build:
+        context: ./sonic
+      ports:
+        - "${SONIC_PORT}:1491"
+      volumes:
+        - ${DATA_PATH_HOST}/sonic/kv:/var/lib/sonic/store/kv
+        - ${DATA_PATH_HOST}/sonic/fst:/var/lib/sonic/store/fst
+      networks:
+        - backend
