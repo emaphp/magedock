@@ -47,6 +47,8 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   sonic:
     driver: ${VOLUMES_DRIVER}
+  nsq:
+    driver: ${VOLUMES_DRIVER}
 
 services:
 
@@ -1548,4 +1550,41 @@ services:
         - ${DATA_PATH_HOST}/sonic/kv:/var/lib/sonic/store/kv
         - ${DATA_PATH_HOST}/sonic/fst:/var/lib/sonic/store/fst
       networks:
+        - backend
+### nsq ################################################
+    nsqlookupd:
+      build:
+        context: ./nsq
+      command: /nsqlookupd
+      ports:
+        - "${NSQLOOKUPD_TCP_PORT}:4160"
+        - "${NSQLOOKUPD_HTTP_PORT}:4161"
+      networks:
+        - backend
+
+    nsq:
+      build:
+        context: ./nsq
+      depends_on:
+        - nsqlookupd
+      command: /nsqd --broadcast-address=nsq --lookupd-tcp-address=nsqlookupd:4160
+      ports:
+        - "${NSQD_TCP_PORT}:4150"
+        - "${NSQD_HTTP_PORT}:4151"
+        - "${NSQD_HTTPS_PORT}:4152"
+      volumes:
+      - ${DATA_PATH_HOST}/nsq:/data"
+      networks:
+        - backend
+
+    nsqadmin:
+      build:
+        context: ./nsq
+      depends_on:
+        - nsqlookupd
+      ports:
+        - "${NSQADMIN_PORT}:4171"
+      command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+      networks:
+        - frontend
         - backend

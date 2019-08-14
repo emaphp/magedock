@@ -733,3 +733,11 @@ SONARQUBE_POSTGRES_PASSWORD=sonarPass
 
 ### SONIC ################################################
 SONIC_PORT=1491
+
+### NSQ ################################################
+NSQD_TCP_PORT=4150
+NSQD_HTTP_PORT=4151
+NSQD_HTTPS_PORT=4152
+NSQLOOKUPD_TCP_PORT=4160
+NSQLOOKUPD_HTTP_PORT=4161
+NSQADMIN_PORT=4171
