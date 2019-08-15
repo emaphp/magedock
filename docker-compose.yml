@@ -1574,6 +1574,7 @@ services:
         - "${NSQD_HTTPS_PORT}:4152"
       volumes:
       - ${DATA_PATH_HOST}/nsq:/data"
+      - ./data/certbot/certs/:/var/certs
       networks:
         - backend
 
