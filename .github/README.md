@@ -1,23 +1,24 @@
 # Magedock
 
-An e-commerce friendly Laradock fork.
+An ecommerce-friendly Docker powered enviroment.
 
 ## About
 
-This is a Docker powered environment based on [Laradock](http://laradock.io/), aimed to provide a working environment for Magento and Symfony based solutions.
+This is a Docker powered environment based on [Laradock](http://laradock.io/), aimed to provide a suitable workspace for Magento and Symfony based solutions.
 
 ## What's different?
 
+ * Working *nginx* configuration files for Magento 2 and Symfony 4.
  * (Real) UTF-8 in MySQL ([using utf8mb4](https://medium.com/@adamhooper/in-mysql-never-use-utf8-use-utf8mb4-11761243e434))
  * SOAP and XSL extensions installed by default.
  * Node "LTS" version installed by default (not *latest*).
- * Working *nginx* configuration files for Magento 2 and Symfony 4.
+ * `vue-cli` not installed by default.
+ * `rollup` installed by default.
  * `letsencrypt` installed on `workspace` container.
- * Both `gulp` and `vue-cli` not installed by default.
- * [Sonic](https://crates.io/crates/sonic-server) container.
- * [NSQ](https://nsq.io/) containers.
+ * [Sonic](https://crates.io/crates/sonic-server) service (`docker-compose up sonic`).
+ * [NSQ](https://nsq.io/) services (`docker-compose up nsq nsqadmin`).
 
-This repo also contains an extensive documentation about how to get your project up and running as fast as possible.
+This repo also contains an extensive documentation on how to get your project up and running as fast as possible.
 
 ## Setup
 
@@ -730,6 +731,63 @@ NSQADMIN_PORT=4171
 
 NSQAdmin provides an admin tool for monitoring all traffic that goes through NSQ. Once you start this container, `nsqadmin` will start running on `http://localhost:4171`.
 
+## Tools
+
+While it's good to be able to run everything on Docker, you'll also need to provide tools to the host system to be able to diagnose any future issues you may experience. This list provides instructions for installing these tools on Debian systems.
+
+### mysql-client
+
+Get MySQL config package.
+
+```bash
+wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
+```
+
+Install.
+
+```bash
+sudo dpkg -i mysql-apt-config*
+```
+
+A dialog will appear. This option only determines which packages will be available after updating. Select 'Ok'.
+
+Reload packages.
+
+```bash
+sudo apt-get update
+```
+
+Install.
+
+```bash
+sudo apt-get install mysql-client
+```
+
+### mongoimport
+
+Import the public key.
+
+```bash
+wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+```
+
+Create a /etc/apt/sources.list.d/mongodb-org-4.2.list file.
+
+```bash
+echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.2 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+```
+
+Reload packages.
+
+```bash
+sudo apt-get update
+```
+
+Install.
+
+```bash
+sudo apt-get install -y mongodb-org-tools
+```
 
 ## Troubleshooting
 
