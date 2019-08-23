@@ -46,16 +46,6 @@ RUN set -xe; \
       docker-php-ext-install zip && \
       php -m | grep -q 'zip'
 
-# Install updated version of sodium (Magento >=2.3.2)
-RUN if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-  if [ $(php -r "echo PHP_MINOR_VERSION;") -gt "1" ]; then \
-  echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list; \
-  rm -rf /var/lib/apt/lists/* && apt-get update -y; \
-  apt-get -t stretch-backports install -y libsodium-dev; \
-  docker-php-ext-install sodium; \
-  fi \
-;fi
-
 #
 #--------------------------------------------------------------------------
 # Optional Software's Installation
