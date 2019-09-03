@@ -261,8 +261,8 @@ function m2tclean() {
 
     for i in $lang
     do
-        local dir=pub/static/frontend/$theme/$i
-        rm -Rf "$dir"
+        rm -Rf "pub/static/frontend/$theme/$i" || true
+        rm -Rf "pub/static/adminhtml/$theme/$i" || true
     done
 }
 
