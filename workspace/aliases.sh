@@ -153,6 +153,7 @@ function fs() {
 # Generates a certificate with LetsEncrypt
 # You need to provide a domain, an email and the webroot folder
 # Usage: certmake your-domain.com user@example.com /var/www/my-site-folder
+# Add '-d' for doing a dry-run
 function certmake() {
     if [[ ! -n $1 ]]; then
         echo "certmake: You must specify a domain"
@@ -172,11 +173,23 @@ function certmake() {
     domain=$1
     email=$2
     webroot=$3
+    dry_run=''
 
-    letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text && \
-        mkdir -p /var/certs/"$domain" && \
-        cp /etc/letsencrypt/live/"$domain"/fullchain.pem /var/certs/"$domain" && \
-        cp /etc/letsencrypt/live/"$domain"/privkey.pem /var/certs/"$domain"
+    while getopts 'd' flag; do
+        case "${flag}" in
+            d) dry_run='--dry-run' ;;
+        esac
+    done
+
+    # If this is a dry run don't try to copy the generated certificates to /var/certs
+    if [ "$dry_run" = "--dry-run" ]; then
+        letsencrypt certonly --webroot "$dry_run" -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text
+    else
+        letsencrypt certonly --webroot -w "$webroot" -d "$domain" --agree-tos --email "$email" --non-interactive --text && \
+            mkdir -p /var/certs/"$domain" && \
+            cp /etc/letsencrypt/live/"$domain"/fullchain.pem /var/certs/"$domain" && \
+            cp /etc/letsencrypt/live/"$domain"/privkey.pem /var/certs/"$domain"
+    fi
 }
 
 # Renews all existing certificates
