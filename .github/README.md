@@ -2,6 +2,10 @@
 
 An ecommerce-friendly Docker powered enviroment.
 
+## Changelog
+
+ * 2019-09-03: Up-to-date with changes added in Laradock v8.0.
+
 ## About
 
 This is a Docker powered environment based on [Laradock](http://laradock.io/), aimed to provide a suitable workspace for Magento and Symfony based solutions.
@@ -660,7 +664,7 @@ docker-compose up -d nginx
 docker-compose exec workspace bash
 ```
 
-We'll generate the new certificates by calling `certmake`. This alias will call `letsencrypt certonly` and generates two `.pem` files. You nees to specify a domain, an email and the webroot folder.
+We'll generate the new certificates by calling `certmake`. This alias will call `letsencrypt certonly` and generates two `.pem` files. You nees to specify a domain, an email and the webroot folder. You can also add `-d` to perform a dry-run.
 
 ```
 certmake your-domain.com user@example.com /var/www/letsencrypt
