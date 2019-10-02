@@ -224,7 +224,7 @@ alias m2cl="php bin/magento cache:clean"
 alias m2fl="php bin/magento cache:flush"
 alias m2modeset="php bin/magento deploy:mode:set"
 alias m2enable="php bin/magento module:enable"
-alias m2disable="php bin/magento module:disable"
+alias m2disable="php bin/magento module:disable --clear-static-content"
 alias m2compile="php bin/magento setup:di:compile && php bin/magento cache:clean"
 alias m2dep="php bin/magento setup:static-content:deploy"
 alias m2depf="php bin/magento setup:static-content:deploy -f"
@@ -257,7 +257,10 @@ function m2tclean() {
         lang=$@
     fi
 
-    rm -Rf var/cache && rm -Rf var/view_preprocessed
+    # Fix removing cache with nested folders
+    rm -Rf var/cache/mage-* || true
+    rm -Rf var/cache || true
+    rm -Rf var/view_preprocessed || true
 
     for i in $lang
     do
