@@ -230,6 +230,7 @@ alias m2dep="php bin/magento setup:static-content:deploy"
 alias m2depf="php bin/magento setup:static-content:deploy -f"
 alias m2reindex="php bin/magento indexer:reindex"
 alias m2i18n="php bin/magento i18n:collect-phrases"
+alias getn98="curl -O https://files.magerun.net/n98-magerun2.phar && chmod +x n98-magerun2.phar"
 
 # Invokes setup:upgrade
 # If a module name is specified then it will try to enable first

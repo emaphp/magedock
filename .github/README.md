@@ -22,7 +22,7 @@ This is a Docker powered environment based on [Laradock](http://laradock.io/), a
  * [Sonic](https://crates.io/crates/sonic-server) service (`docker-compose up sonic`).
  * [NSQ](https://nsq.io/) services (`docker-compose up nsq nsqadmin`).
 
-This repo also contains an extensive documentation on how to get your project up and running as fast as possible.
+This repo also contains an comprehensive documentation detailing how to setup different type of projects.
 
 ## Setup
 
@@ -483,6 +483,10 @@ A set of additional aliases is also provided to simplify some common tasks durin
  * `m2lgrep`: Runs grep on all `.less` files inside the Magento default themes. Useful for searching LESS variables by name. Example: `m2lgrep @copyright__background-color`.
  * `m2tgrep`: Runs grep on all `.xml`, `.phtml` and `.html` files inside the Magento default themes. You can specify an optional subfolder. Example: `m2tgrep title Magento_Customer`.
  * `m2mgrep`: Runs grep on all `.xml`, `.phtml` and `.html` files inside the given module. Module name must be in snake-case. Example: `m2mgrep price catalog-search`.
+
+### Installing n98
+
+[n98](https://github.com/netz98/n98-magerun2) is a CLI tool aimed to help Magento 2 developers into doing administration tasks without having to login into the system. We install n98 by downloading a `.phar` file into the main application directory. Once inside your app, run `getn98` and wait until the download is complete. Check the installation by running `./n98-magerun2.phar`.
 
 ## Shopify projects
 
