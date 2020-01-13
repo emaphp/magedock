@@ -69,6 +69,7 @@ services:
           - LARADOCK_PHALCON_VERSION=${PHALCON_VERSION}
           - INSTALL_SUBVERSION=${WORKSPACE_INSTALL_SUBVERSION}
           - INSTALL_XDEBUG=${WORKSPACE_INSTALL_XDEBUG}
+          - INSTALL_PCOV=${WORKSPACE_INSTALL_PCOV}
           - INSTALL_PHPDBG=${WORKSPACE_INSTALL_PHPDBG}
           - INSTALL_BLACKFIRE=${INSTALL_BLACKFIRE}
           - INSTALL_SSH2=${WORKSPACE_INSTALL_SSH2}
@@ -76,6 +77,7 @@ services:
           - INSTALL_SOAP=${WORKSPACE_INSTALL_SOAP}
           - INSTALL_XSL=${WORKSPACE_INSTALL_XSL}
           - INSTALL_LDAP=${WORKSPACE_INSTALL_LDAP}
+          - INSTALL_SMB=${WORKSPACE_INSTALL_SMB}
           - INSTALL_IMAP=${WORKSPACE_INSTALL_IMAP}
           - INSTALL_MONGO=${WORKSPACE_INSTALL_MONGO}
           - INSTALL_AMQP=${WORKSPACE_INSTALL_AMQP}
@@ -171,11 +173,13 @@ services:
           - LARADOCK_PHP_VERSION=${PHP_VERSION}
           - LARADOCK_PHALCON_VERSION=${PHALCON_VERSION}
           - INSTALL_XDEBUG=${PHP_FPM_INSTALL_XDEBUG}
+          - INSTALL_PCOV=${PHP_FPM_INSTALL_PCOV}
           - INSTALL_PHPDBG=${PHP_FPM_INSTALL_PHPDBG}
           - INSTALL_BLACKFIRE=${INSTALL_BLACKFIRE}
           - INSTALL_SSH2=${PHP_FPM_INSTALL_SSH2}
           - INSTALL_SOAP=${PHP_FPM_INSTALL_SOAP}
           - INSTALL_XSL=${PHP_FPM_INSTALL_XSL}
+          - INSTALL_SMB=${PHP_FPM_INSTALL_SMB}
           - INSTALL_IMAP=${PHP_FPM_INSTALL_IMAP}
           - INSTALL_MONGO=${PHP_FPM_INSTALL_MONGO}
           - INSTALL_AMQP=${PHP_FPM_INSTALL_AMQP}
@@ -431,6 +435,7 @@ services:
       build:
         context: ./mssql
       environment:
+        - MSSQL_PID=Express
         - MSSQL_DATABASE=${MSSQL_DATABASE}
         - SA_PASSWORD=${MSSQL_PASSWORD}
         - ACCEPT_EULA=Y
@@ -1606,7 +1611,7 @@ services:
       volumes:
         - ${MANTICORE_CONFIG_PATH}:/etc/sphinxsearch
         - ${DATA_PATH_HOST}/manticore/data:/var/lib/manticore/data
-        - ${DATA_PATH_HOST}/manticore/log:/var/lib/manticore/log
+        - ${DATA_PATH_HOST}/manticore/log:/var/log/manticore
       ports:
         - "${MANTICORE_API_PORT}:9312"
         - "${MANTICORE_SPHINXQL_PORT}:9306"

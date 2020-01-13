@@ -51,7 +51,11 @@ RUN set -xe; \
       #
       # next lines are here becase there is no auto build on dockerhub see https://github.com/laradock/laradock/pull/1903#issuecomment-463142846
       libzip-dev zip unzip && \
-      docker-php-ext-configure zip --with-libzip && \
+      if [ ${LARADOCK_PHP_VERSION} = "7.3" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ]; then \
+        docker-php-ext-configure zip; \
+      else \
+        docker-php-ext-configure zip --with-libzip; \
+      fi && \
       # Install the zip extension
       docker-php-ext-install zip && \
       php -m | grep -q 'zip'
@@ -172,6 +176,24 @@ COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
     sed -i "s/xdebug.remote_enable=0/xdebug.remote_enable=1/" /usr/local/etc/php/conf.d/xdebug.ini && \
     sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" /usr/local/etc/php/conf.d/xdebug.ini
+
+###########################################################################
+# pcov:
+###########################################################################
+
+USER root
+
+ARG INSTALL_PCOV=false
+
+RUN if [ ${INSTALL_PCOV} = true ]; then \
+  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
+    if [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; then \
+      pecl install pcov && \
+      docker-php-ext-enable pcov \
+    ;fi \
+  ;fi \
+;fi
+
 
 ###########################################################################
 # Phpdbg:
@@ -638,6 +660,16 @@ RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
     apt-get install -y libmagickwand-dev imagemagick && \
     pecl install imagick && \
     docker-php-ext-enable imagick \
+;fi
+
+###########################################################################
+# SMB:
+###########################################################################
+
+ARG INSTALL_SMB=false
+
+RUN if [ ${INSTALL_SMB} = true ]; then \
+    apt-get install -y smbclient php-smbclient coreutils \
 ;fi
 
 ###########################################################################
