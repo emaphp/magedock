@@ -4,6 +4,7 @@ An ecommerce-friendly Docker powered enviroment.
 
 ## Changelog
 
+ * 2020-02-03: Up-to-date with changes added in Laradock v9.6.
  * 2019-12-23: Up-to-date with changes added in Laradock v9.3.
  * 2019-09-03: Up-to-date with changes added in Laradock v8.0.
 
