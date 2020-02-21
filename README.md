@@ -4,6 +4,7 @@ An ecommerce-friendly Docker powered enviroment.
 
 ## Changelog
 
+ * 2020-02-21: Install `sockets` extension by default (required by Magento 2.3.4 installer).
  * 2020-02-19: Up-to-date with changes added in Laradock v9.7.
  * 2020-02-03: Up-to-date with changes added in Laradock v9.6.
  * 2019-12-23: Up-to-date with changes added in Laradock v9.3.
@@ -18,7 +19,7 @@ This is a Docker powered environment based on [Laradock](http://laradock.io/), a
  * Working *nginx* configuration files for Magento 2 and Symfony 4.
  * (Real) UTF-8 in MySQL ([using utf8mb4](https://medium.com/@adamhooper/in-mysql-never-use-utf8-use-utf8mb4-11761243e434))
  * SOAP and XSL extensions installed by default.
- * Node "LTS" version installed by default (not *latest*).
+ * Node *LTS* version installed by default (not *latest*).
  * `vue-cli` not installed by default.
  * `rollup` installed by default.
  * `letsencrypt` installed on `workspace` container.
@@ -336,7 +337,7 @@ docker-compose build workspace
 Now start your containers as usual and login.
 
 ```
-docker-compose up -d nginx mysql phpmyadmin
+docker-compose up -d nginx mysql workspace
 docker-compose exec --user laradock workspace bash
 ```
 
@@ -364,14 +365,14 @@ docker-compose exec --user laradock workspace bash
 Now, download Magento 2 codebase using `curl`. The file to download will depend on the version you want to run.
 
 ```
-curl -L https://github.com/magento/magento2/archive/2.3.2.tar.gz -o magento2.tar.gz
+curl -L https://github.com/magento/magento2/archive/2.3.4.tar.gz -o magento2.tar.gz
 ```
 
 Unzip the file. Files are extracted to a `magento2-2.x.x` folder. Rename it if needed.
 
 ```
 tar -xzvf magento2.tar.gz
-mv magento2-2.3.2/ magento2/
+mv magento2-2.3.4/ magento2/
 ```
 
 Install dependencies through *Composer*:
@@ -396,15 +397,15 @@ exit
 Magento 2 already includes some `nginx` configuration files that we'll to import from our config. If your Magento 2 installation is not located on the `magento2` folder then you'll need to adjust the newly created configuration file by hand.
 
 ```
-docker-compose down
 cd nginx/sites
 cp magento2.conf.example magento2.conf
+vim magento2.conf
 ```
 
-Restart the containers to load you new configuration.
+Apply the changes you consider necessary. Restart the `nginx` container to load your new configuration.
 
 ```
-docker-compose up -d nginx mysql
+docker-compose restart nginx
 ```
 
 ### Running the installer
@@ -821,60 +822,6 @@ docker-compose logs -f nginx
 ```
 
 Keep in mind that all server logs will be only available on their corresponding container.
-
-## Backers
-
-<a href="https://opencollective.com/laradock/backer/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/0/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/1/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/2/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/2/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/3/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/3/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/4/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/4/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/5/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/5/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/6/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/6/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/7/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/7/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/8/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/8/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/9/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/9/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/10/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/10/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/11/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/11/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/12/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/12/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/13/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/13/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/14/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/14/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/15/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/15/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/16/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/16/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/17/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/17/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/18/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/18/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/19/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/19/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/20/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/20/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/21/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/21/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/22/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/22/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/23/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/23/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/24/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/24/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/25/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/25/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/26/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/26/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/27/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/28/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/29/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/30/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/30/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/31/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/31/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/32/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/32/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/33/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/33/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/34/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/34/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/35/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/35/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/36/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/36/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/37/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/37/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/38/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/38/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/39/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/39/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/40/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/40/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/41/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/41/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/42/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/42/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/43/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/43/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/44/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/44/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/45/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/45/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/46/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/46/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/47/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/47/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/48/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/48/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/laradock/backer/49/website?requireActive=false" target="_blank"><img src="https://opencollective.com/laradock/backer/49/avatar.svg?requireActive=false"></a>
-
 
 ## License
 
