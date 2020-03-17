@@ -53,7 +53,7 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   graylog:
     driver: ${VOLUMES_DRIVER}
-  dind:
+  docker-in-docker:
     driver: ${VOLUMES_DRIVER}
 
 services:
@@ -145,21 +145,28 @@ services:
           - INSTALL_POWERLINE=${WORKSPACE_INSTALL_POWERLINE}
           - INSTALL_SUPERVISOR=${WORKSPACE_INSTALL_SUPERVISOR}
           - INSTALL_FFMPEG=${WORKSPACE_INSTALL_FFMPEG}
+          - INSTALL_WKHTMLTOPDF=${WORKSPACE_INSTALL_WKHTMLTOPDF}
           - INSTALL_GNU_PARALLEL=${WORKSPACE_INSTALL_GNU_PARALLEL}
           - http_proxy
           - https_proxy
           - no_proxy
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - docker-in-docker:/certs/client
         - ./php-worker/supervisord.d:/etc/supervisord.d
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
         - "${WORKSPACE_SSH_PORT}:22"
+        - "${WORKSPACE_VUE_CLI_SERVE_HOST_PORT}:8080"
+        - "${WORKSPACE_VUE_CLI_UI_HOST_PORT}:8000"
       tty: true
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
-        - DOCKER_HOST=tcp://docker-in-docker:2375
+        - DOCKER_HOST=tcp://docker-in-docker:2376
+        - DOCKER_TLS_VERIFY=1
+        - DOCKER_TLS_CERTDIR=/certs
+        - DOCKER_CERT_PATH=/certs/client
       networks:
         - frontend
         - backend
@@ -226,6 +233,7 @@ services:
           - INSTALL_PCNTL=${PHP_FPM_INSTALL_PCNTL}
           - ADDITIONAL_LOCALES=${PHP_FPM_ADDITIONAL_LOCALES}
           - INSTALL_FFMPEG=${PHP_FPM_FFMPEG}
+          - INSTALL_WKHTMLTOPDF=${PHP_FPM_INSTALL_WKHTMLTOPDF}
           - INSTALL_XHPROF=${PHP_FPM_INSTALL_XHPROF}
           - PUID=${PHP_FPM_PUID}
           - PGID=${PHP_FPM_PGID}
@@ -236,13 +244,17 @@ services:
       volumes:
         - ./php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - docker-in-docker:/certs/client
       expose:
         - "9000"
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
-        - DOCKER_HOST=tcp://docker-in-docker:2375
+        - DOCKER_HOST=tcp://docker-in-docker:2376
+        - DOCKER_TLS_VERIFY=1
+        - DOCKER_TLS_CERTDIR=/certs
+        - DOCKER_CERT_PATH=/certs/client
         - FAKETIME=${PHP_FPM_FAKETIME}
       depends_on:
         - workspace
@@ -260,6 +272,7 @@ services:
           - LARADOCK_PHP_VERSION=${PHP_VERSION}
           - PHALCON_VERSION=${PHALCON_VERSION}
           - INSTALL_BZ2=${PHP_WORKER_INSTALL_BZ2}
+          - INSTALL_GD=${PHP_WORKER_INSTALL_GD}
           - INSTALL_GMP=${PHP_WORKER_INSTALL_GMP}
           - INSTALL_PGSQL=${PHP_WORKER_INSTALL_PGSQL}
           - INSTALL_BCMATH=${PHP_WORKER_INSTALL_BCMATH}
@@ -294,8 +307,10 @@ services:
           - CHANGE_SOURCE=${CHANGE_SOURCE}
           - LARADOCK_PHP_VERSION=${PHP_VERSION}
           - INSTALL_BZ2=${LARAVEL_HORIZON_INSTALL_BZ2}
+          - INSTALL_GD=${LARAVEL_HORIZON_INSTALL_GD}
           - INSTALL_GMP=${LARAVEL_HORIZON_INSTALL_GMP}
           - INSTALL_PGSQL=${PHP_FPM_INSTALL_PGSQL}
+          - INSTALL_ZIP_ARCHIVE=${LARAVEL_HORIZON_INSTALL_ZIP_ARCHIVE}
           - INSTALL_BCMATH=${PHP_FPM_INSTALL_BCMATH}
           - INSTALL_MEMCACHED=${PHP_FPM_INSTALL_MEMCACHED}
           - INSTALL_SOCKETS=${LARAVEL_HORIZON_INSTALL_SOCKETS}
@@ -304,8 +319,8 @@ services:
           - INSTALL_PHPREDIS=${LARAVEL_HORIZON_INSTALL_PHPREDIS}
           - INSTALL_MONGO=${LARAVEL_HORIZON_INSTALL_MONGO}
           - INSTALL_FFMPEG=${LARAVEL_HORIZON_INSTALL_FFMPEG}
-          - PUID=${PHP_WORKER_PUID}
-          - PGID=${PHP_WORKER_PGID}
+          - PUID=${LARAVEL_HORIZON_PUID}
+          - PGID=${LARAVEL_HORIZON_PGID}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         - ./laravel-horizon/supervisord.d:/etc/supervisord.d
@@ -1276,11 +1291,13 @@ services:
 
 ### Docker-in-Docker ################################################
     docker-in-docker:
-      image: docker:dind
+      image: docker:19.03-dind
+      environment:
+        DOCKER_TLS_SAN: DNS:docker-in-docker      
       privileged: true
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${DATA_PATH_HOST}/dind:/var/lib/docker
+        - docker-in-docker:/certs/client
       expose:
         - 2375
       networks:

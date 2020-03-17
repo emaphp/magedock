@@ -118,7 +118,7 @@ RUN if [ ${INSTALL_SSH2} = true ]; then \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
         pecl install -a ssh2-0.13; \
     else \
-        pecl install -a ssh2-1.1.2; \
+        pecl install -a ssh2-1.2; \
     fi && \
     docker-php-ext-enable ssh2 \
 ;fi
@@ -200,7 +200,11 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
   if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
     pecl install xdebug-2.5.5; \
   else \
-    pecl install xdebug; \
+    if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
+      pecl install xdebug-2.9.0; \
+    else \
+      pecl install xdebug; \
+    fi \
   fi && \
   docker-php-ext-enable xdebug \
 ;fi
@@ -858,6 +862,26 @@ ARG INSTALL_FFMPEG=false
 
 RUN if [ ${INSTALL_FFMPEG} = true ]; then \
     apt-get -y install ffmpeg \
+;fi
+
+#####################################
+# wkhtmltopdf:
+#####################################
+
+USER root
+
+ARG INSTALL_WKHTMLTOPDF=false
+
+RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
+    apt-get install -y \
+    libxrender1 \
+    libfontconfig1 \
+    libx11-dev \
+    libjpeg62 \
+    libxtst6 \
+    wget \
+    && wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
+    && chmod +x /usr/local/bin/wkhtmltopdf \
 ;fi
 
 ###########################################################################

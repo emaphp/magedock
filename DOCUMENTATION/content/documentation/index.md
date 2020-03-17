@@ -560,8 +560,14 @@ composer update
 ```bash
 phpunit
 ```
-
-
+```
+vue serve
+```
+(browse the results at `http://localhost:[WORKSPACE_VUE_CLI_SERVE_HOST_PORT]`)
+```
+vue ui
+```
+(browse the results at `http://localhost:[WORKSPACE_VUE_CLI_UI_HOST_PORT]`)
 
 
 
@@ -1890,7 +1896,11 @@ To install NPM VUE CLI in the Workspace container
 
 2 - Search for the `WORKSPACE_INSTALL_NPM_VUE_CLI` argument under the Workspace Container and set it to `true`
 
-3 - Re-build the container `docker-compose build workspace`
+3 - Change `vue serve` port using `WORKSPACE_VUE_CLI_SERVE_HOST_PORT` if you wish to (default value is 8080)
+
+4 - Change `vue ui` port using `WORKSPACE_VUE_CLI_UI_HOST_PORT` if you wish to (default value is 8001)
+
+5 - Re-build the container `docker-compose build workspace`
 
 
 
@@ -1946,7 +1956,21 @@ To install FFMPEG in the Workspace container
 **PS** Don't forget to install the binary in the `php-fpm` container too by applying the same steps above to its container, otherwise the you'll get an error when running the `php-ffmpeg` binary.
 
 
+<br>
+<a name="Install-wkhtmltopdf"></a>
+## Install wkhtmltopdf
 
+[wkhtmltopdf](https://wkhtmltopdf.org/) is a utility for outputting a PDF from HTML
+
+To install wkhtmltopdf in the Workspace container
+
+1 - Open the `.env` file
+
+2 - Search for the `WORKSPACE_INSTALL_WKHTMLTOPDF` argument under the Workspace Container and set it to `true`
+
+3 - Re-build the container `docker-compose build workspace`
+
+**PS** Don't forget to install the binary in the `php-fpm` container too by applying the same steps above to its container, otherwise the you'll get an error when running the `wkhtmltopdf` binary.
 
 
 
