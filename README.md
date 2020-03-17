@@ -1,6 +1,6 @@
 # Magedock
 
-An ecommerce-friendly Docker powered enviroment.
+An ecommerce-friendly Docker powered environment.
 
 ## Changelog
 
