@@ -4,6 +4,7 @@ An ecommerce-friendly Docker powered environment.
 
 ## Changelog
 
+ * 2020-06-25: Up-to-date with changes added in Laradock v11.0.
  * 2020-03-17: Up-to-date with changes added in Laradock v10.0.
  * 2020-02-21: Install `sockets` extension by default (required by Magento 2.3.4 installer).
  * 2020-02-19: Up-to-date with changes added in Laradock v9.7.
