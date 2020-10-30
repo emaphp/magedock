@@ -366,14 +366,14 @@ docker-compose exec --user laradock workspace bash
 Now, download Magento 2 codebase using `curl`. The file to download will depend on the version you want to run.
 
 ```
-curl -L https://github.com/magento/magento2/archive/2.3.4.tar.gz -o magento2.tar.gz
+curl -L https://github.com/magento/magento2/archive/2.3.5.tar.gz -o magento2.tar.gz
 ```
 
 Unzip the file. Files are extracted to a `magento2-2.x.x` folder. Rename it if needed.
 
 ```
 tar -xzvf magento2.tar.gz
-mv magento2-2.3.4/ magento2/
+mv magento2-2.3.5/ magento2/
 ```
 
 Install dependencies through *Composer*:
