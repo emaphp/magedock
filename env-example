@@ -829,6 +829,14 @@ NSQLOOKUPD_TCP_PORT=4160
 NSQLOOKUPD_HTTP_PORT=4161
 NSQADMIN_PORT=4171
 
+### REDMINE ################################################
+REDMINE_VERSION=latest
+REDMINE_PORT=3001
+REDMINE_DB_HOST=mysql
+REDMINE_DB_NAME=redmine
+REDMINE_DB_USER=mysql-user
+REDMINE_DB_PASSWORD=mysql-passw
+
 ### CASSANDRA ################################################
 
 # Cassandra Version, supported tags can be found at https://hub.docker.com/r/bitnami/cassandra/

@@ -4,6 +4,7 @@ An ecommerce-friendly Docker powered environment.
 
 ## Changelog
 
+ * 2020-11-01: Added `redmine` service.
  * 2020-06-25: Up-to-date with changes added in Laradock v11.0.
  * 2020-03-17: Up-to-date with changes added in Laradock v10.0.
  * 2020-02-21: Install `sockets` extension by default (required by Magento 2.3.4 installer).
@@ -27,6 +28,7 @@ This is a Docker powered environment based on [Laradock](http://laradock.io/), a
  * `letsencrypt` installed on `workspace` container.
  * [Sonic](https://crates.io/crates/sonic-server) service (`docker-compose up sonic`).
  * [NSQ](https://nsq.io/) services (`docker-compose up nsq nsqadmin`).
+ * [Redmine](https://www.redmine.org/) service (`docker-compose up redmine`).
 
 This repo also contains an extensive documentation on how to get your project up and running as fast as possible.
 
@@ -367,14 +369,14 @@ docker-compose exec --user laradock workspace bash
 Now, download Magento 2 codebase using `curl`. The file to download will depend on the version you want to run.
 
 ```
-curl -L https://github.com/magento/magento2/archive/2.3.4.tar.gz -o magento2.tar.gz
+curl -L https://github.com/magento/magento2/archive/2.3.5.tar.gz -o magento2.tar.gz
 ```
 
 Unzip the file. Files are extracted to a `magento2-2.x.x` folder. Rename it if needed.
 
 ```
 tar -xzvf magento2.tar.gz
-mv magento2-2.3.4/ magento2/
+mv magento2-2.3.5/ magento2/
 ```
 
 Install dependencies through *Composer*:
@@ -740,6 +742,16 @@ NSQADMIN_PORT=4171
 ### nsqadmin
 
 NSQAdmin provides an admin tool for monitoring all traffic that goes through NSQ. Once you start this container, `nsqadmin` will start running on `http://localhost:4171`.
+
+## Redmine
+
+*Redmine* is a flexible project management web application. Written using the *Ruby on Rails* framework, it is cross-platform and cross-database.
+
+By default, the `redmine` service runs using `mysql`, but you can adjust it to make it work with `postgres` (check this [guide](https://hub.docker.com/_/redmine) for details).
+
+Make sure to create the database (the one defined in `REDMINE_DB_NAME`) before the first run. The process might take a while to complete.
+
+Once done, login into the system as `admin:admin`.
 
 ## Tools
 
